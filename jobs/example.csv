@@ -1,0 +1,4 @@
+plugin_slug,zip_source,type,activate
+the-events-calendar-pro,https://example.com/downloads/tec-pro-6.5.4.zip?key=SECRET123,url,false
+document-library-pro,/Users/paul/Downloads/dlp-3.5.1.zip,file,false
+gravity-forms,https://s3.amazonaws.com/releases/gravityforms-2.8.1.zip?token=ABC123,url,true

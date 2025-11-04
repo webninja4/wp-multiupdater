@@ -1,0 +1,34 @@
+# WordPress Sites Inventory
+#
+# This file defines all WordPress sites that can be targeted for plugin updates.
+# Each site must have SSH access configured with key-based authentication.
+
+- name: britt-prod
+  host: ssh.brittfest.org
+  user: appuser
+  path: /home/xxx/htdocs/public_html
+  url: https://www.brittfest.org
+  wp_cli: wp
+
+- name: laclinica-prod
+  host: ssh.laclinica.org
+  user: appuser
+  path: /home/xxx/htdocs/public_html
+  url: https://www.laclinica.org
+  wp_cli: wp
+
+- name: example-staging
+  host: staging.example.com
+  user: wpuser
+  path: /var/www/wordpress
+  url: https://staging.example.com
+  wp_cli: /usr/local/bin/wp
+
+# Field Descriptions:
+#
+# name: Unique identifier for this site (used in filters and reports)
+# host: SSH hostname or IP address
+# user: SSH username (must have SSH key access)
+# path: Absolute path to WordPress installation root (where wp-config.php lives)
+# url: Base URL of the WordPress site (for HTTP health checks)
+# wp_cli: Path to wp-cli binary (default: "wp" if in PATH)

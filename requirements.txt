@@ -1,0 +1,13 @@
+# ProjectA WP Multi-Updater - Python Dependencies
+
+# YAML parsing for inventory files
+PyYAML>=6.0.1
+
+# No other external dependencies required!
+# The tool uses Python 3.10+ stdlib for:
+# - subprocess (ssh/scp)
+# - sqlite3 (results database)
+# - csv (job files and reports)
+# - concurrent.futures (ThreadPoolExecutor)
+# - argparse (CLI)
+# - logging (structured output)
