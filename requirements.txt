@@ -3,6 +3,9 @@
 # YAML parsing for inventory files
 PyYAML>=6.0.1
 
+# HTTP requests for Cloudways API integration (optional)
+requests>=2.31.0
+
 # No other external dependencies required!
 # The tool uses Python 3.10+ stdlib for:
 # - subprocess (ssh/scp)
