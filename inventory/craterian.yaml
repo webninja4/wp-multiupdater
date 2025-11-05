@@ -1,0 +1,8 @@
+# Craterian WordPress Sites
+
+- name: craterian-staging
+  host: 104.207.159.106
+  user: master_beesbmscpg
+  path: /home/master/applications/xgeqcsqzqc/public_html
+  url: https://staging.craterian.org
+  wp_cli: wp

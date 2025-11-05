@@ -17,11 +17,26 @@ Usage:
 
 import os
 import sys
+import time
 import requests
 import yaml
 from pathlib import Path
 from typing import Dict, List
 
+
+# Load .env file if it exists
+def load_env():
+    """Load environment variables from .env file."""
+    env_path = Path(__file__).parent.parent / ".env"
+    if env_path.exists():
+        with open(env_path) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ[key.strip()] = value.strip()
+
+load_env()
 
 # Cloudways API Configuration
 API_BASE_URL = "https://api.cloudways.com/api/v1"
@@ -92,10 +107,15 @@ def get_apps_for_server(access_token: str, server_id: str) -> List[Dict]:
     response = requests.get(url, headers=headers, params=params)
 
     if response.status_code != 200:
-        print(f"Warning: Failed to fetch apps for server {server_id}")
+        print(f"Warning: Failed to fetch apps for server {server_id} (HTTP {response.status_code})")
         return []
 
-    data = response.json()
+    try:
+        data = response.json()
+    except Exception as e:
+        print(f"Warning: Failed to parse JSON for server {server_id}: {e}")
+        return []
+
     apps = data.get("apps", [])
 
     return apps
@@ -122,6 +142,9 @@ def generate_inventory(access_token: str) -> List[Dict]:
         server_hostname = f"server-{server_id}.cloudways.com"
 
         print(f"\nProcessing server: {server_label} (ID: {server_id})")
+
+        # Add delay to avoid rate limiting (Cloudways API limit)
+        time.sleep(2)
 
         apps = get_apps_for_server(access_token, server_id)
         print(f"  Found {len(apps)} application(s)")

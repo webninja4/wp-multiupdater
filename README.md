@@ -2,6 +2,8 @@
 
 A production-grade command-line tool for safely updating premium WordPress plugins across multiple sites via SSH and WP-CLI.
 
+**Status:** ⚠️ **Active Development** - Core functionality working, Cloudways-specific fixes in progress.
+
 ## Features
 
 - **Safe Updates**: Automatic database backups before each plugin update
@@ -27,12 +29,20 @@ A production-grade command-line tool for safely updating premium WordPress plugi
 # Clone or navigate to the project
 cd wp-multi-updater
 
+# Create virtual environment (recommended)
+python3 -m venv venv
+source venv/bin/activate
+
 # Install dependencies
 pip install -r requirements.txt
 
 # Copy and configure environment (optional)
 cp .env.sample .env
 ```
+
+### Cloudways Users
+
+If you're using Cloudways hosting, see [CLOUDWAYS_SETUP.md](CLOUDWAYS_SETUP.md) for specific configuration instructions and API integration.
 
 ### Basic Usage
 
@@ -266,6 +276,27 @@ cd /home/app/public_html
 wp maintenance-mode deactivate
 rm -f .maintenance  # force removal if needed
 ```
+
+### Cloudways SCP Issues
+
+**Known Issue:** Direct SCP to `/tmp/plugin.zip` fails on Cloudways servers.
+
+**Temporary Workaround:**
+Use manual file upload or wait for fix in next release.
+
+**Permanent Fix (In Progress):**
+- Orchestrator will upload to `~/plugin.zip` instead
+- See [SESSION-NOTES.md](SESSION-NOTES.md) for details
+
+### Cloudways Chmod Warnings
+
+**Expected Behavior:** WP-CLI shows ~100 chmod warnings during plugin install on Cloudways.
+
+**Impact:** Cosmetic only - plugin installs successfully.
+
+**Why:** Cloudways file ownership model (SSH user ≠ file owner).
+
+**Fix:** Warnings will be suppressed in next release.
 
 ## Project Structure
 
