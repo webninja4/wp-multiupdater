@@ -445,7 +445,7 @@ def run_remote_script(
     env_vars = {
         'PLUGIN_SLUG': plugin.slug,
         'ZIP_MODE': plugin.type,
-        'ZIP_VALUE': plugin.zip_source if plugin.type == 'url' else '/tmp/plugin.zip',
+        'ZIP_VALUE': plugin.zip_source if plugin.type == 'url' else '$HOME/plugin.zip',
         'ACTIVATE': 'true' if plugin.activate else 'false',
         'SITE_URL': site.url,
         'WP_CLI': site.wp_cli
@@ -568,12 +568,12 @@ def execute_task(
             logger.error(result.error_message)
             return result
 
-        logger.info(f"Copying plugin ZIP to {site.name}:/tmp/plugin.zip")
+        logger.info(f"Copying plugin ZIP to {site.name}:~/plugin.zip")
 
         success, error_msg = scp_file(
             site=site,
             local_path=local_path,
-            remote_path='/tmp/plugin.zip',
+            remote_path='plugin.zip',  # SCP will place in home directory by default
             timeout=timeout,
             ssh_opts=ssh_opts
         )

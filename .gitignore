@@ -54,3 +54,7 @@ id_rsa*
 # Backup plugin ZIPs (if you store them locally)
 downloads/
 backups/
+
+# Files
+inventory/sites-import-template.csv
+inventory/sites.yaml

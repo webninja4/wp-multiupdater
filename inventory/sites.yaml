@@ -1,12 +1,134 @@
 # WordPress Sites Inventory
 # All sites managed by the updater tool
 #
-# Organization: Grouped by Cloudways server for easy management
+# Organization: Grouped by Cloudways server (IP address) for easy management
+# Total: 35 sites across 13 servers
 # Each site needs: name, host, user, path, url, wp_cli
 
 # ========================================
-# Cloudways Server: WP-4 (ID: 765902)
-# Host: 104.207.159.106
+# Server 1: 45.76.247.1
+# Sites: 1
+# ========================================
+
+- name: brittfest-staging
+  host: 45.76.247.1
+  user: master_hdurggstjm
+  path: /home/master/applications/rgvusjyaut/public_html
+  url: https://staging.brittfest.org/
+  wp_cli: wp
+
+# ========================================
+# Server 2: 45.77.210.64
+# Sites: 6 (McMenamins venues - Crystal Ballroom, Edgefield, Grand Lodge)
+# ========================================
+
+- name: crystalballroom
+  host: 45.77.210.64
+  user: master_xehbwmrfwu
+  path: /home/master/applications/tmkyqjcqbg/public_html
+  url: https://www.crystalballroompdx.com/
+  wp_cli: wp
+
+- name: edgefield
+  host: 45.77.210.64
+  user: master_xehbwmrfwu
+  path: /home/master/applications/jqqwggbavs/public_html
+  url: https://edgefieldconcerts.com/
+  wp_cli: wp
+
+- name: grandlodge
+  host: 45.77.210.64
+  user: master_xehbwmrfwu
+  path: /home/master/applications/eskzdjudry/public_html
+  url: https://grandlodgeconcerts.com/
+  wp_cli: wp
+
+- name: crystalballroom-staging
+  host: 45.77.210.64
+  user: master_xehbwmrfwu
+  path: /home/master/applications/snfhpphasr/public_html
+  url: https://staging-crystalballroom.projectahost.com
+  wp_cli: wp
+
+- name: edgefield-staging
+  host: 45.77.210.64
+  user: master_xehbwmrfwu
+  path: /home/master/applications/bjtethxqbn/public_html
+  url: https://staging.edgefieldconcerts.com
+  wp_cli: wp
+
+- name: grandlodge-staging
+  host: 45.77.210.64
+  user: master_xehbwmrfwu
+  path: /home/master/applications/yuqjzwfyyw/public_html
+  url: https://grandlodgeconcerts.projectahost.com
+  wp_cli: wp
+
+# ========================================
+# Server 3: 45.63.38.138
+# Sites: 1
+# ========================================
+
+- name: sedonafilm
+  host: 45.63.38.138
+  user: master_vrzdawkafv
+  path: /home/master/applications/efbgqtmwnx/public_html
+  url: https://sedonafilmfestival.com/
+  wp_cli: wp
+
+# ========================================
+# Server 4: 45.32.228.206
+# Sites: 2
+# ========================================
+
+- name: so-innovationhub
+  host: 45.32.228.206
+  user: master_jbwcsxxaff
+  path: /home/master/applications/pdzhtzakhk/public_html
+  url: https://southernoregoninnovationhub.org/
+  wp_cli: wp
+
+- name: corvallisareampo
+  host: 45.32.228.206
+  user: master_jbwcsxxaff
+  path: /home/master/applications/jgucxzsdzu/public_html
+  url: https://corvallisareampo.org/
+  wp_cli: wp
+
+# ========================================
+# Server 5: 66.42.66.11
+# Sites: 1
+# ========================================
+
+- name: shadycove
+  host: 66.42.66.11
+  user: master_gpcnaeavaz
+  path: /home/master/applications/pwqakdutjb/public_html
+  url: https://shadycove.org/
+  wp_cli: wp
+
+# ========================================
+# Server 6: 66.42.75.220
+# Sites: 2
+# ========================================
+
+- name: soufoundation-board
+  host: 66.42.75.220
+  user: master_yzjbqpzhky
+  path: /home/master/applications/hrrjvgtqnp/public_html
+  url: https://soufoundation.boardmeetingportal.com/
+  wp_cli: wp
+
+- name: board-meeting-portal
+  host: 66.42.75.220
+  user: master_yzjbqpzhky
+  path: /home/master/applications/nhzvcvahbx/public_html
+  url: https://boardbuddy.projectahost.com/
+  wp_cli: wp
+
+# ========================================
+# Server 7: 104.207.159.106
+# Sites: 4 (Craterian, Ashland New Plays, Guilde des Fromagers)
 # ========================================
 
 - name: craterian-staging
@@ -16,37 +138,185 @@
   url: https://staging.craterian.org
   wp_cli: wp
 
-# Add more sites on WP-4 server here:
-# - name: another-site-on-wp4
-#   host: 104.207.159.106  # Same server IP
-#   user: different_user123  # Different app user
-#   path: /home/master/applications/xxxxxxxxxx/public_html
-#   url: https://another-site.com
-#   wp_cli: wp
+- name: craterian
+  host: 104.207.159.106
+  user: master_beesbmscpg
+  path: /home/master/applications/xjwckazrtb/public_html
+  url: https://craterian.org/
+  wp_cli: wp
+
+- name: ashland-new-plays
+  host: 104.207.159.106
+  user: master_beesbmscpg
+  path: /home/master/applications/uauynrgzxa/public_html
+  url: https://ashlandnewplays.org/
+  wp_cli: wp
+
+- name: guildedesfromagers
+  host: 104.207.159.106
+  user: master_beesbmscpg
+  path: /home/master/applications/gqzsxsmans/public_html
+  url: https://guildedesfromagers.us/
+  wp_cli: wp
 
 # ========================================
-# Cloudways Server: WP-1 (ID: 480259)
-# Host: [IP address]
+# Server 8: 137.184.113.42
+# Sites: 2 (1000museums prod + staging)
 # ========================================
 
-# - name: site-on-wp1
-#   host: 123.45.67.89
-#   user: user_for_this_app
-#   path: /home/master/applications/yyyyyyyyyy/public_html
-#   url: https://example.com
-#   wp_cli: wp
+- name: 1000museums
+  host: 137.184.113.42
+  user: master_efwqbxnrpv
+  path: /home/master/applications/npbeqfmhmg/public_html
+  url: https://www.1000museums.com/
+  wp_cli: wp
+
+- name: 1000museums-staging
+  host: 137.184.113.42
+  user: master_efwqbxnrpv
+  path: /home/master/applications/mcerebhhzf/public_html
+  url: https://staging.1000museums.com/
+  wp_cli: wp
 
 # ========================================
-# Cloudways Server: Britt Festival (ID: 614611)
-# Host: [IP address]
+# Server 9: 137.220.43.212
+# Sites: 1
 # ========================================
 
-# - name: britt-prod
-#   host: 192.168.1.1
-#   user: britt_prod_user
-#   path: /home/master/applications/zzzzzzzzzz/public_html
-#   url: https://www.brittfest.org
-#   wp_cli: wp
+- name: muprc
+  host: 137.220.43.212
+  user: master_yetjfbkhsf
+  path: /home/master/applications/czygnhrwvv/public_html
+  url: https://muprc.projectahost.com
+  wp_cli: wp
+
+# ========================================
+# Server 10: 144.202.82.108
+# Sites: 1
+# ========================================
+
+- name: jacksoncountyorcoc
+  host: 144.202.82.108
+  user: master_xcfatdpcvw
+  path: /home/master/applications/bawtmbtzbq/public_html
+  url: https://jacksoncountyorcoc.projectahost.com/
+  wp_cli: wp
+
+# ========================================
+# Server 11: 149.28.8.137
+# Sites: 2 (Phoenix Oregon prod + staging)
+# ========================================
+
+- name: phoenixoregon
+  host: 149.28.8.137
+  user: master_jpmuvnuvuv
+  path: /home/master/applications/dhdfkdxusc/public_html
+  url: https://www.phoenixoregon.gov/
+  wp_cli: wp
+
+- name: phoenixoregon-staging
+  host: 149.28.8.137
+  user: master_jpmuvnuvuv
+  path: /home/master/applications/jfnpjsvqhk/public_html
+  url: https://phoenixstaging.projectahost.com
+  wp_cli: wp
+
+# ========================================
+# Server 12: 149.28.14.25
+# Sites: 5 (Project A demos and client sites)
+# ========================================
+
+- name: residents-mtmeadows
+  host: 149.28.14.25
+  user: master_xhrpkmebas
+  path: /home/master/applications/frkdhmpuud/public_html
+  url: https://residents.mountainmeadowsashland.com/
+  wp_cli: wp
+
+- name: city-demo
+  host: 149.28.14.25
+  user: master_xhrpkmebas
+  path: /home/master/applications/cdnnmxjjwq/public_html
+  url: http://demo.projectahost.com/
+  wp_cli: wp
+
+- name: brucecampbell
+  host: 149.28.14.25
+  user: master_xhrpkmebas
+  path: /home/master/applications/ukemutercg/public_html
+  url: https://bruce-campbell.com/
+  wp_cli: wp
+
+- name: sohs
+  host: 149.28.14.25
+  user: master_xhrpkmebas
+  path: /home/master/applications/tbcghymsve/public_html
+  url: https://sohs.org/
+  wp_cli: wp
+
+- name: baseoregon
+  host: 149.28.14.25
+  user: master_xhrpkmebas
+  path: /home/master/applications/bufukfnehp/public_html
+  url: https://baseoregon.org/
+  wp_cli: wp
+
+# ========================================
+# Server 13: 149.248.35.216
+# Sites: 3 (Travel Ashland, RVFRA)
+# ========================================
+
+- name: travelashland
+  host: 149.248.35.216
+  user: master_yerkcdyrgf
+  path: /home/master/applications/czzmsxsraq/public_html
+  url: https://travelashland.com/
+  wp_cli: wp
+
+- name: travelashland-staging
+  host: 149.248.35.216
+  user: master_yerkcdyrgf
+  path: /home/master/applications/xndestvxda/public_html
+  url: https://staging.travelashland.com
+  wp_cli: wp
+
+- name: rvfra
+  host: 149.248.35.216
+  user: master_yerkcdyrgf
+  path: /home/master/applications/qkdttgkhvn/public_html
+  url: https://rvfra.projectahost.com
+  wp_cli: wp
+
+# ========================================
+# Server 14: 149.248.37.82
+# Sites: 1
+# ========================================
+
+- name: camelottheatre
+  host: 149.248.37.82
+  user: master_cgudftmwdp
+  path: /home/master/applications/bwpeysqkwm/public_html
+  url: https://camelottheatre.org/
+  wp_cli: wp
+
+# ========================================
+# Server 15: 164.92.107.249
+# Sites: 2
+# ========================================
+
+- name: todayinashland
+  host: 164.92.107.249
+  user: master_scrsmfugzq
+  path: /home/master/applications/avmrsxtwng/public_html
+  url: https://todayinashland.com/
+  wp_cli: wp
+
+- name: attheexpo
+  host: 164.92.107.249
+  user: master_scrsmfugzq
+  path: /home/master/applications/cbeustptus/public_html
+  url: https://attheexpo.com/
+  wp_cli: wp
 
 # ========================================
 # How to add a new site:
@@ -56,7 +326,7 @@
 #    - Copy: SSH/SFTP Username, Application Path
 #    - Servers → Your Server → Copy Public IP
 #
-# 2. Add entry above (copy template):
+# 2. Add entry above under the appropriate server section (or create new section)
 #    - name: unique-site-identifier (use lowercase-with-dashes)
 #    - host: Server IP (same for all apps on that server)
 #    - user: SSH username from Cloudways (unique per app)

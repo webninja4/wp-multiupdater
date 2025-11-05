@@ -5,7 +5,7 @@
 # USAGE: Run via SSH from orchestrator with ENV vars:
 #   PLUGIN_SLUG    - WordPress plugin slug (e.g., "the-events-calendar-pro")
 #   ZIP_MODE       - "url" or "file"
-#   ZIP_VALUE      - URL or /tmp/plugin.zip path
+#   ZIP_VALUE      - URL or $HOME/plugin.zip path
 #   ACTIVATE       - "true" or "false"
 #   SITE_URL       - Site base URL for HTTP health check
 #
@@ -180,8 +180,8 @@ if [[ "$ZIP_MODE" == "url" ]]; then
   log "Plugin downloaded to: $ZIP_PATH"
 
 elif [[ "$ZIP_MODE" == "file" ]]; then
-  # Expect the orchestrator already scp'd to /tmp/plugin.zip
-  # ZIP_VALUE should be the path (e.g., /tmp/plugin.zip)
+  # Expect the orchestrator already scp'd to $HOME/plugin.zip
+  # ZIP_VALUE should be the path (e.g., $HOME/plugin.zip)
 
   if [[ ! -f "$ZIP_VALUE" ]]; then
     error_exit "ZIP_FETCH_FAIL: Expected ZIP file not found at $ZIP_VALUE"
@@ -210,8 +210,13 @@ fi
 log "Installing plugin with --force to ensure update..."
 
 # The --force flag makes this idempotent: it will overwrite existing plugin
-if ! $WP_CLI plugin install "$ZIP_PATH" --force 2>&1 | tee /tmp/wp-plugin-install-$$.log; then
-  ERROR_MESSAGE="PLUGIN_INSTALL_FAIL: wp plugin install returned non-zero"
+# Note: We ignore exit code because chmod warnings on Cloudways cause non-zero exit
+# Instead, we verify the plugin is actually installed afterwards
+$WP_CLI plugin install "$ZIP_PATH" --force 2>&1 | tee /tmp/wp-plugin-install-$$.log || true
+
+# Verify plugin was actually installed by checking if it exists
+if ! $WP_CLI plugin is-installed "$PLUGIN_SLUG" 2>/dev/null; then
+  ERROR_MESSAGE="PLUGIN_INSTALL_FAIL: Plugin not found after install attempt"
   cat /tmp/wp-plugin-install-$$.log >&2 || true
   rm -f /tmp/wp-plugin-install-$$.log || true
   STATUS="failed"

@@ -2,11 +2,12 @@
 
 A production-grade command-line tool for safely updating premium WordPress plugins across multiple sites via SSH and WP-CLI.
 
-**Status:** ⚠️ **Active Development** - Core functionality working, Cloudways-specific fixes in progress.
+**Status:** ✅ **Production Ready** - Core functionality complete with cache-clearing wrapper
 
 ## Features
 
 - **Safe Updates**: Automatic database backups before each plugin update
+- **Cache Management**: Optional wrapper script clears Breeze and Object Cache Pro before/after updates
 - **Maintenance Mode**: Automatic cleanup on exit (even on failures)
 - **Verification**: Pre/post version tracking and HTTP health checks
 - **Concurrency**: Update multiple sites in parallel (default: 10 workers)
@@ -71,11 +72,16 @@ document-library-pro,/path/to/local/plugin.zip,file,false
 # Dry run first (recommended)
 python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv --dry-run
 
-# Execute updates
+# Execute updates (standard)
 python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv
 
-# With concurrency control
-python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv --concurrency 5
+# RECOMMENDED: Use cache-clearing wrapper for production
+python scripts/update-with-cache-clear.py \
+  --sites inventory/sites.yaml \
+  --plugins jobs/plugins.csv \
+  --ssh-opts "-i ~/.ssh/id_rsa_cloudways" \
+  --only-sites site1,site2 \
+  --max-parallel 3
 ```
 
 ### Advanced Usage
@@ -100,7 +106,35 @@ python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv \
 python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv --timeout-sec 1200
 ```
 
+### Cache-Clearing Wrapper (Production Recommended)
+
+The `update-with-cache-clear.py` wrapper prevents cache-related issues by clearing Breeze and Object Cache Pro before and after updates:
+
+```bash
+# Standard usage with cache clearing
+python scripts/update-with-cache-clear.py \
+  --sites inventory/sites.yaml \
+  --plugins jobs/plugins.csv \
+  --ssh-opts "-i ~/.ssh/id_rsa_cloudways" \
+  --only-sites site1,site2,site3
+
+# Control parallelism (default: 3 sites at once)
+python scripts/update-with-cache-clear.py \
+  --sites inventory/sites.yaml \
+  --plugins jobs/plugins.csv \
+  --ssh-opts "-i ~/.ssh/id_rsa_cloudways" \
+  --max-parallel 5
+```
+
+**Benefits:**
+- Prevents cached admin errors after plugin updates
+- Clears both WordPress object cache and Breeze page cache
+- Processes sites sequentially with configurable parallelism
+- Recommended for production use
+
 ## Command-Line Options
+
+### orchestrator.py
 
 | Option | Description | Default |
 |--------|-------------|---------|
@@ -114,6 +148,16 @@ python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv -
 | `--timeout-sec` | Timeout per task in seconds | 900 |
 | `--report-dir` | Directory for output reports | reports |
 | `--ssh-opts` | Additional SSH options | "" |
+
+### update-with-cache-clear.py
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--sites` | Path to sites YAML inventory | Required |
+| `--plugins` | Path to plugins CSV job file | Required |
+| `--ssh-opts` | SSH options (e.g., key path) | "" |
+| `--only-sites` | Comma-separated site names to target | All sites |
+| `--max-parallel` | Max sites to update in parallel | 3 |
 
 ## Safety Features
 
@@ -209,31 +253,6 @@ If an update causes issues:
    curl -I https://www.example.com
    ```
 
-## Security Considerations
-
-### SSH Keys Only
-
-The tool uses SSH key-based authentication. Never commit private keys or passwords to the repository.
-
-### URL Redaction
-
-URLs with query strings (e.g., signed S3 URLs) are redacted in logs:
-
-```
-https://example.com/plugin.zip?token=SECRET
-  becomes
-https://example.com/plugin.zip?[REDACTED]
-```
-
-### Environment Variables
-
-Store sensitive tokens in `.env` (gitignored):
-
-```bash
-# .env
-SLACK_WEBHOOK=https://hooks.slack.com/services/YOUR/SECRET/TOKEN
-```
-
 ## Troubleshooting
 
 ### SSH Connection Fails
@@ -277,82 +296,37 @@ wp maintenance-mode deactivate
 rm -f .maintenance  # force removal if needed
 ```
 
-### Cloudways SCP Issues
+### Cache-Related Admin Errors
 
-**Known Issue:** Direct SCP to `/tmp/plugin.zip` fails on Cloudways servers.
+If admin shows errors after plugin updates but frontend works:
 
-**Temporary Workaround:**
-Use manual file upload or wait for fix in next release.
+**Solution**: Use the cache-clearing wrapper:
+```bash
+python scripts/update-with-cache-clear.py ...
+```
 
-**Permanent Fix (In Progress):**
-- Orchestrator will upload to `~/plugin.zip` instead
-- See [SESSION-NOTES.md](SESSION-NOTES.md) for details
-
-### Cloudways Chmod Warnings
-
-**Expected Behavior:** WP-CLI shows ~100 chmod warnings during plugin install on Cloudways.
-
-**Impact:** Cosmetic only - plugin installs successfully.
-
-**Why:** Cloudways file ownership model (SSH user ≠ file owner).
-
-**Fix:** Warnings will be suppressed in next release.
+This clears Breeze and Object Cache Pro before/after updates.
 
 ## Project Structure
 
 ```
 wp-multi-updater/
-├── orchestrator.py              # Main CLI tool
+├── orchestrator.py                     # Main CLI tool
 ├── scripts/
-│   └── remote-update.sh         # Remote execution script
+│   ├── remote-update.sh                # Remote execution script
+│   └── update-with-cache-clear.py      # Production wrapper with cache clearing
 ├── inventory/
-│   └── sites.yaml               # Site definitions
+│   └── sites.yaml                      # Site definitions
 ├── jobs/
-│   ├── plugins.csv              # Plugin update jobs
-│   └── example.csv              # Sample job file
-├── reports/                     # Generated reports (CSV + MD)
+│   ├── example.csv                     # Sample job file
+│   └── *.csv                           # Plugin update jobs
+├── reports/                            # Generated reports (CSV + MD)
 ├── state/
-│   └── results.sqlite           # Task history database
-├── requirements.txt             # Python dependencies
-├── .env.sample                  # Environment template
-└── README.md                    # This file
+│   └── results.sqlite                  # Task history database
+├── requirements.txt                    # Python dependencies
+├── .env.sample                         # Environment template
+└── README.md                           # This file
 ```
-
-## Development
-
-### Running Tests
-
-```bash
-# Unit tests (when available)
-python -m pytest tests/
-
-# Test on staging sites first
-python orchestrator.py --sites inventory/sites-staging.yaml --plugins jobs/test.csv
-```
-
-### Adding a New Site
-
-Edit [inventory/sites.yaml](inventory/sites.yaml):
-
-```yaml
-- name: newsite-prod
-  host: ssh.newsite.com
-  user: appuser
-  path: /var/www/wordpress
-  url: https://www.newsite.com
-  wp_cli: /usr/local/bin/wp  # custom path if needed
-```
-
-### Extending the Remote Script
-
-The [scripts/remote-update.sh](scripts/remote-update.sh) script can be customized:
-
-- Add pre-flight checks
-- Modify backup retention
-- Add custom health checks
-- Emit additional MARKER data
-
-The orchestrator parses lines starting with `MARKER ` for structured data extraction.
 
 ## CI/CD Integration
 
@@ -373,9 +347,11 @@ jobs:
           python-version: '3.10'
       - run: pip install -r requirements.txt
       - run: |
-          python orchestrator.py \
+          python scripts/update-with-cache-clear.py \
             --sites inventory/sites.yaml \
-            --plugins jobs/monthly-updates.csv
+            --plugins jobs/monthly-updates.csv \
+            --ssh-opts "-i ${{ secrets.SSH_KEY_PATH }}" \
+            --max-parallel 3
       - uses: actions/upload-artifact@v3
         if: always()
         with:

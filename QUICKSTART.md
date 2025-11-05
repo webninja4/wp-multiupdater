@@ -5,6 +5,11 @@ Get up and running with WP Multi-Updater in 5 minutes.
 ## 1. Install Dependencies
 
 ```bash
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install packages
 pip install -r requirements.txt
 ```
 
@@ -48,11 +53,27 @@ python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv -
 
 ## 6. Execute Updates
 
-Run the updates:
+### Option A: Standard (Development/Testing)
 
 ```bash
 python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv
 ```
+
+### Option B: With Cache Clearing (RECOMMENDED for Production)
+
+```bash
+python scripts/update-with-cache-clear.py \
+  --sites inventory/sites.yaml \
+  --plugins jobs/plugins.csv \
+  --ssh-opts "-i ~/.ssh/id_rsa_cloudways" \
+  --only-sites site1,site2 \
+  --max-parallel 3
+```
+
+The cache-clearing wrapper is recommended for production because it:
+- Clears Breeze and Object Cache Pro before updates
+- Prevents cached admin errors
+- Clears caches again after updates complete
 
 ## 7. Review Reports
 
@@ -79,6 +100,14 @@ python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv \
 # Increase timeout for large sites
 python orchestrator.py --sites inventory/sites.yaml --plugins jobs/plugins.csv \
   --timeout-sec 1800
+
+# Production workflow with cache clearing
+python scripts/update-with-cache-clear.py \
+  --sites inventory/sites.yaml \
+  --plugins jobs/plugins.csv \
+  --ssh-opts "-i ~/.ssh/id_rsa_cloudways" \
+  --only-sites site1,site2,site3 \
+  --max-parallel 3
 ```
 
 ## Troubleshooting
@@ -109,10 +138,21 @@ Increase timeout:
 python orchestrator.py ... --timeout-sec 1800  # 30 minutes
 ```
 
+### Cache-Related Admin Errors
+
+Use the cache-clearing wrapper:
+
+```bash
+python scripts/update-with-cache-clear.py \
+  --sites inventory/sites.yaml \
+  --plugins jobs/plugins.csv \
+  --ssh-opts "-i ~/.ssh/id_rsa_cloudways"
+```
+
 ## Next Steps
 
 - Read the full [README.md](README.md) for detailed documentation
-- Review the [PRD](WP_MultiUpdater_PRD.md) for architecture details
+- Review [SESSION-NOTES.md](SESSION-NOTES.md) for current status
 - Set up a CI/CD pipeline for automated updates
 
 ## Safety Reminders
@@ -121,3 +161,4 @@ python orchestrator.py ... --timeout-sec 1800  # 30 minutes
 - Database backups are created automatically in `./backups/` on each site
 - Maintenance mode is automatically cleared on exit
 - Use `--dry-run` to preview changes before executing
+- Use cache-clearing wrapper for production to prevent cache issues
