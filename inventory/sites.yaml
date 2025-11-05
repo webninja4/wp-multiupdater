@@ -1,34 +1,71 @@
 # WordPress Sites Inventory
+# All sites managed by the updater tool
 #
-# This file defines all WordPress sites that can be targeted for plugin updates.
-# Each site must have SSH access configured with key-based authentication.
+# Organization: Grouped by Cloudways server for easy management
+# Each site needs: name, host, user, path, url, wp_cli
 
-- name: britt-prod
-  host: ssh.brittfest.org
-  user: appuser
-  path: /home/xxx/htdocs/public_html
-  url: https://www.brittfest.org
+# ========================================
+# Cloudways Server: WP-4 (ID: 765902)
+# Host: 104.207.159.106
+# ========================================
+
+- name: craterian-staging
+  host: 104.207.159.106
+  user: master_beesbmscpg
+  path: /home/master/applications/xgeqcsqzqc/public_html
+  url: https://staging.craterian.org
   wp_cli: wp
 
-- name: laclinica-prod
-  host: ssh.laclinica.org
-  user: appuser
-  path: /home/xxx/htdocs/public_html
-  url: https://www.laclinica.org
-  wp_cli: wp
+# Add more sites on WP-4 server here:
+# - name: another-site-on-wp4
+#   host: 104.207.159.106  # Same server IP
+#   user: different_user123  # Different app user
+#   path: /home/master/applications/xxxxxxxxxx/public_html
+#   url: https://another-site.com
+#   wp_cli: wp
 
-- name: example-staging
-  host: staging.example.com
-  user: wpuser
-  path: /var/www/wordpress
-  url: https://staging.example.com
-  wp_cli: /usr/local/bin/wp
+# ========================================
+# Cloudways Server: WP-1 (ID: 480259)
+# Host: [IP address]
+# ========================================
 
-# Field Descriptions:
+# - name: site-on-wp1
+#   host: 123.45.67.89
+#   user: user_for_this_app
+#   path: /home/master/applications/yyyyyyyyyy/public_html
+#   url: https://example.com
+#   wp_cli: wp
+
+# ========================================
+# Cloudways Server: Britt Festival (ID: 614611)
+# Host: [IP address]
+# ========================================
+
+# - name: britt-prod
+#   host: 192.168.1.1
+#   user: britt_prod_user
+#   path: /home/master/applications/zzzzzzzzzz/public_html
+#   url: https://www.brittfest.org
+#   wp_cli: wp
+
+# ========================================
+# How to add a new site:
+# ========================================
+# 1. Get details from Cloudways:
+#    - Applications → Your App → Access Details
+#    - Copy: SSH/SFTP Username, Application Path
+#    - Servers → Your Server → Copy Public IP
 #
-# name: Unique identifier for this site (used in filters and reports)
-# host: SSH hostname or IP address
-# user: SSH username (must have SSH key access)
-# path: Absolute path to WordPress installation root (where wp-config.php lives)
-# url: Base URL of the WordPress site (for HTTP health checks)
-# wp_cli: Path to wp-cli binary (default: "wp" if in PATH)
+# 2. Add entry above (copy template):
+#    - name: unique-site-identifier (use lowercase-with-dashes)
+#    - host: Server IP (same for all apps on that server)
+#    - user: SSH username from Cloudways (unique per app)
+#    - path: Application path from Cloudways (unique per app)
+#    - url: Site's public URL (for HTTP health checks)
+#    - wp_cli: usually just "wp"
+#
+# 3. Test SSH access:
+#    ssh -i ~/.ssh/id_rsa_cloudways USER@HOST "cd PATH && wp core version"
+#
+# 4. Run dry-run to verify:
+#    python orchestrator.py --sites inventory/sites.yaml --plugins jobs/test.csv --only-sites your-site-name --dry-run

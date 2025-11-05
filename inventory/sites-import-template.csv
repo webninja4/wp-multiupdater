@@ -1,0 +1,3 @@
+name,host,user,path,url,wp_cli
+craterian-staging,104.207.159.106,master_beesbmscpg,/home/master/applications/xgeqcsqzqc/public_html,https://staging.craterian.org,wp
+example-site,123.45.67.89,example_user,/home/master/applications/xxxxxxxxxx/public_html,https://example.com,wp
