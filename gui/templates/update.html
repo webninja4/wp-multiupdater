@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Update Plugins - WP Multi-Updater{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">
+                <i class="bi bi-cloud-download"></i> Update Plugins
+            </h1>
+            <p class="lead">Install or update plugins across multiple sites</p>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <strong>Coming Soon:</strong> The plugin update interface is under development.
+        For now, please use the CLI:
+        <pre class="mt-2"><code>python scripts/update-with-cache-clear.py --sites inventory/sites.yaml --plugins jobs/my-job.csv</code></pre>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Planned Features</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>Select multiple sites with checkboxes</li>
+                        <li>Upload plugin ZIP files or provide URLs</li>
+                        <li>Configure update options (cache clearing, parallelism)</li>
+                        <li>Real-time progress display</li>
+                        <li>Per-site status indicators</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

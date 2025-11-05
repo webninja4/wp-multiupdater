@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Sites - WP Multi-Updater{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">
+                <i class="bi bi-server"></i> Manage Sites
+            </h1>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('site_add') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-circle"></i> Add New Site
+            </a>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search sites...">
+        </div>
+    </div>
+
+    <!-- Sites Grouped by Server -->
+    {% for host, sites in sites_by_server.items() %}
+    <div class="card mb-4 server-group">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-hdd-rack"></i> Server: {{ host }}
+                <span class="badge bg-light text-dark">{{ sites|length }} site(s)</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>URL</th>
+                            <th>User</th>
+                            <th>Path</th>
+                            <th>WP-CLI</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for site in sites %}
+                        <tr class="site-row" data-name="{{ site.name }}" data-url="{{ site.url }}">
+                            <td>
+                                <strong>{{ site.name }}</strong>
+                            </td>
+                            <td>
+                                <a href="{{ site.url }}" target="_blank" class="text-decoration-none">
+                                    {{ site.url }}
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            </td>
+                            <td><code>{{ site.user }}</code></td>
+                            <td><small class="text-muted">{{ site.path }}</small></td>
+                            <td><code>{{ site.wp_cli }}</code></td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-info test-ssh-btn"
+                                            data-site-name="{{ site.name }}"
+                                            title="Test SSH Connection">
+                                        <i class="bi bi-wifi"></i>
+                                    </button>
+                                    <a href="{{ url_for('site_edit', site_name=site.name) }}"
+                                       class="btn btn-warning" title="Edit Site">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-danger delete-site-btn"
+                                            data-site-name="{{ site.name }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                            title="Delete Site">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if not sites_by_server %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No sites found in inventory.
+        <a href="{{ url_for('site_add') }}">Add your first site</a>.
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete site <strong id="deleteSiteName"></strong>?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display:inline">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SSH Test Result Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="sshTestToast" class="toast" role="alert">
+        <div class="toast-header">
+            <strong class="me-auto">SSH Connection Test</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="sshTestMessage"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/sites.js') }}"></script>
+{% endblock %}

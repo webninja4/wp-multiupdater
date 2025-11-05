@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Update History - WP Multi-Updater{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">
+                <i class="bi bi-clock-history"></i> Update History
+            </h1>
+            <p class="lead">Review past plugin update runs</p>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        <strong>Coming Soon:</strong> The history interface is under development.
+        For now, you can query the SQLite database directly:
+        <pre class="mt-2"><code>sqlite3 state/results.sqlite "SELECT * FROM runs ORDER BY run_id DESC LIMIT 10;"</code></pre>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Planned Features</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>List of recent update runs with timestamps</li>
+                        <li>Summary statistics (success/warning/failed counts)</li>
+                        <li>Detailed per-site results</li>
+                        <li>Download CSV/Markdown reports</li>
+                        <li>Filter by date range, site, or plugin</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
